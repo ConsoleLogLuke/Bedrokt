@@ -4,19 +4,23 @@ package wtf.lpc.bedrokt.api
 
 import com.andreapivetta.kolor.Color
 import com.andreapivetta.kolor.Kolor
+import wtf.lpc.bedrokt.callEvent
 import wtf.lpc.bedrokt.logHistory
-import kotlin.system.exitProcess
+import wtf.lpc.bedrokt.stopServer
 
 class Logger(private val name: String) {
     private fun log(color: Color, message: String) {
+        callEvent(EventType.CONSOLE_MESSAGE) { it.onConsoleMessage(name, color, message) }
+
         val fullMessage = Kolor.foreground("-> ", color) + name + Kolor.foreground(" | ", color) + message
+
         println(fullMessage)
         logHistory.add(fullMessage)
     }
 
     fun newline() {
         println()
-        logHistory.add("\n")
+        logHistory.add("")
     }
 
     fun info(message: String) = log(Color.CYAN, message)
@@ -26,6 +30,6 @@ class Logger(private val name: String) {
 
     fun fatal(message: String) {
         log(Color.RED, message)
-        exitProcess(1)
+        stopServer(1)
     }
 }

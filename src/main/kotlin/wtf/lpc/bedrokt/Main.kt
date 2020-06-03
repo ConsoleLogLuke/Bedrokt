@@ -11,10 +11,13 @@ import kotlin.concurrent.schedule
 val packetCodec: BedrockPacketCodec = Bedrock_v390.V390_CODEC
 val jsonMapper: ObjectMapper = ObjectMapper().disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
 
+const val bedroktVersion = "1.0"
+val fullBedroktVersion =
+    "Bedrokt v$bedroktVersion - Minecraft ${packetCodec.minecraftVersion} (protocol v${packetCodec.protocolVersion})"
+
 fun main() {
-    proxyLogger.info(
-        "Bedrokt v1.0 - Minecraft ${packetCodec.minecraftVersion} (protocol v${packetCodec.protocolVersion}"
-    )
+    proxyLogger.info(fullBedroktVersion)
+    proxyLogger.newline()
 
     if (File("/").canWrite()) {
         proxyLogger.warn("Bedrokt has root write access. This IS dangerous because plugins can run any arbitrary code!")
@@ -27,6 +30,18 @@ fun main() {
     reloadConfig()
     reloadPlugins()
 
+    proxyLogger.newline()
     startServer()
-    Timer().schedule(0, 1) {}
+
+    proxyLogger.newline()
+    proxyLogger.info("Done! Run /help for a list of Bedrokt commands.")
+
+    Timer().schedule(0, 1) {
+        val input = readLine() ?: return@schedule
+
+        if (input.startsWith("/")) {
+            val command = input.removePrefix("/")
+            getCommand(command).consoleExecute()
+        }
+    }
 }

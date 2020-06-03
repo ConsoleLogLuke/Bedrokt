@@ -139,6 +139,7 @@ gradle-app.setting
 # gradle/wrapper/gradle-wrapper.properties
 
 # Bedrokt
-config.yaml
-!src/main/resources/config.yaml
+config.yml
+!src/main/resources/config.yml
 plugins/
+logs/

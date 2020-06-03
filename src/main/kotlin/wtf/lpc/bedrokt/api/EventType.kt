@@ -2,6 +2,7 @@ package wtf.lpc.bedrokt.api
 
 enum class EventType(val methodName: String) {
     PROXY_START("onProxyStart"),
+    CONSOLE_MESSAGE("onConsoleMessage"),
 
     PLAYER_PROXY_JOIN("onPlayerProxyJoin"),
     PLAYER_SERVER_JOIN("onPlayerServerJoin"),

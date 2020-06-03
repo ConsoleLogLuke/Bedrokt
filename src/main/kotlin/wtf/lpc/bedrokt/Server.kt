@@ -7,6 +7,7 @@ import wtf.lpc.bedrokt.api.EventType
 import java.net.InetAddress
 import java.net.InetSocketAddress
 import kotlin.random.Random
+import kotlin.system.exitProcess
 import kotlin.system.measureTimeMillis
 
 lateinit var server: Server
@@ -53,7 +54,7 @@ class Server(bindAddress: InetSocketAddress) : BedrockServer(bindAddress), Bedro
         createPlayer(playerPort, session)
 
         session.addDisconnectHandler {
-            players[playerPort]?.disconnectFromProxy(it)
+            players[playerPort]?.disconnectFromProxy()
         }
 
         session.batchedHandler = BatchHandler { _, _, packets ->
@@ -85,7 +86,18 @@ fun startServer() {
     } / 1000f
 
     proxyLogger.info("Server started on $localIp:$port in ${startTime}s!")
-    proxyLogger.newline()
-
     callEvent(EventType.PROXY_START) { it.onProxyStart() }
+}
+
+fun stopServer(statusCode: Int = 0) {
+    proxyLogger.info("Stopping server; unloading plugins...")
+
+    plugins.forEach { unloadPlugin(it) }
+    players.values.forEach { it.disconnectFromProxy("Proxy is shutting down!") }
+
+    server.close()
+    saveLog()
+
+    proxyLogger.info("Goodbye!")
+    exitProcess(statusCode)
 }

@@ -31,10 +31,14 @@ fun callEvent(eventType: EventType, code: (Plugin) -> Unit) {
     }
 }
 
+fun unloadPlugin(plugin: Plugin) {
+    runArbitraryPluginCode("${plugin.name}: An error occurred in onUnload.") { plugin.onUnload() }
+    plugins.remove(plugin)
+    proxyLogger.info("Unloaded ${plugin.name} v${plugin.version}!")
+}
+
 fun reloadPlugins() {
     if (!pluginDir.exists()) pluginDir.mkdirs()
-
-    proxyLogger.newline()
     proxyLogger.info("Reloading plugins...")
 
     var unloadCount = 0
@@ -42,11 +46,8 @@ fun reloadPlugins() {
 
     val reloadTime = measureTimeMillis {
         plugins.forEach {
-            runArbitraryPluginCode("${it.name}: An error occurred in onUnload.") { it.onUnload() }
-            plugins.remove(it)
-
+            unloadPlugin(it)
             unloadCount++
-            proxyLogger.info("Unloaded ${it.name} v${it.version}!")
         }
 
         for (file in pluginDir.listFiles()!!) {
@@ -70,7 +71,6 @@ fun reloadPlugins() {
     val loadWord = if (loadCount == 1) "plugin" else "plugins"
 
     proxyLogger.info("Unloaded $unloadCount $unloadWord and loaded $loadCount $loadWord in ${reloadTime}s!")
-    proxyLogger.newline()
 }
 
 fun loadJarPlugin(jarFile: File): Plugin {

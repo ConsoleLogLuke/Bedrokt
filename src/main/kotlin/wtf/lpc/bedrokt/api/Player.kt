@@ -2,13 +2,13 @@
 
 package wtf.lpc.bedrokt.api
 
-import com.nukkitx.network.util.DisconnectReason
 import com.nukkitx.protocol.bedrock.BedrockClient
 import com.nukkitx.protocol.bedrock.BedrockPacket
 import com.nukkitx.protocol.bedrock.BedrockPacketType
 import com.nukkitx.protocol.bedrock.BedrockServerSession
 import com.nukkitx.protocol.bedrock.handler.BatchHandler
 import com.nukkitx.protocol.bedrock.packet.ServerToClientHandshakePacket
+import com.nukkitx.protocol.bedrock.packet.TextPacket
 import com.nukkitx.protocol.bedrock.packet.TransferPacket
 import wtf.lpc.bedrokt.*
 import java.net.InetSocketAddress
@@ -51,9 +51,13 @@ open class Player(bindAddress: InetSocketAddress, realSession: BedrockServerSess
                         player.onServerToClientPacket(this, it)
                     }
 
-                    if (it.packetType == BedrockPacketType.SERVER_TO_CLIENT_HANDSHAKE) {
-                        returnHandshake(it as ServerToClientHandshakePacket)
-                    } else sendPacketToClient(it)
+                    when (it.packetType) {
+                        BedrockPacketType.SERVER_TO_CLIENT_HANDSHAKE -> {
+                            returnHandshake(it as ServerToClientHandshakePacket)
+                        }
+                        BedrockPacketType.DISCONNECT -> disconnectFromProxy()
+                        else -> sendPacketToClient(it)
+                    }
                 }
             }
 
@@ -61,12 +65,16 @@ open class Player(bindAddress: InetSocketAddress, realSession: BedrockServerSess
         }.join()
     }
 
-    fun disconnectFromProxy(reason: DisconnectReason? = null) {
+    fun disconnectFromProxy(reason: String? = null) {
         callEvent(EventType.PLAYER_PROXY_DISCONNECT) { it.onPlayerProxyDisconnect(this) }
-        this.close()
+
+        if (!session.isClosed) session.disconnect()
+
+        if (reason == null) internal.realSession.disconnect()
+        else internal.realSession.disconnect(reason)
 
         players.remove(bindAddress.port)
-        proxyLogger.info("Player $gamertag disconnected${if (reason != null) " for reason $reason" else ""}!")
+        proxyLogger.info("Player $gamertag disconnected!")
     }
 
     fun sendPacketToServer(packet: BedrockPacket) = session.sendPacketImmediately(packet)
@@ -74,9 +82,20 @@ open class Player(bindAddress: InetSocketAddress, realSession: BedrockServerSess
 
     fun sendToServer(hostname: String, port: Int) {
         val packet = TransferPacket()
-
         packet.address = hostname
         packet.port = port
+
+        sendPacketToClient(packet)
+    }
+
+    fun sendMessage(message: String) {
+        val packet = TextPacket()
+        packet.platformChatId = ""
+        packet.sourceName = ""
+        packet.xuid = ""
+        packet.type = TextPacket.Type.CHAT
+        packet.isNeedsTranslation = false
+        packet.message = message
 
         sendPacketToClient(packet)
     }

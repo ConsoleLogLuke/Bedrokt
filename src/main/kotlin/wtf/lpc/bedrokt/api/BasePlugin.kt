@@ -1,5 +1,6 @@
 package wtf.lpc.bedrokt.api
 
+import com.andreapivetta.kolor.Color
 import com.nukkitx.protocol.bedrock.BedrockPacket
 
 interface BasePlugin {
@@ -7,6 +8,7 @@ interface BasePlugin {
     fun onUnload() {}
 
     fun onProxyStart() {}
+    fun onConsoleMessage(logger: String, color: Color, message: String) {}
 
     fun onPlayerProxyJoin(player: Player) {}
     fun onPlayerServerJoin(player: Player, serverHostname: String, serverPort: Int) {}
