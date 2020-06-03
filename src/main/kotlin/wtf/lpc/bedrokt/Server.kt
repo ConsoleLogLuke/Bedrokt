@@ -3,6 +3,7 @@ package wtf.lpc.bedrokt
 import com.nukkitx.protocol.bedrock.*
 import com.nukkitx.protocol.bedrock.handler.BatchHandler
 import com.nukkitx.protocol.bedrock.packet.LoginPacket
+import wtf.lpc.bedrokt.api.EventType
 import java.net.InetAddress
 import java.net.InetSocketAddress
 import kotlin.random.Random
@@ -59,9 +60,13 @@ class Server(bindAddress: InetSocketAddress) : BedrockServer(bindAddress), Bedro
             packets.forEach {
                 if (config.logPackets) proxyLogger.debug("Client -> Server: $it")
 
+                callEvent(EventType.CLIENT_TO_SERVER_PACKET) { plugin ->
+                    plugin.onClientToServerPacket(players[playerPort]!!, it)
+                }
+
                 if (it.packetType == BedrockPacketType.LOGIN) {
                     players[playerPort]?.login(it as LoginPacket)
-                } else players[playerPort]?.session?.sendPacket(it)
+                } else players[playerPort]?.sendPacketToServer(it)
             }
         }
     }
@@ -81,4 +86,6 @@ fun startServer() {
 
     proxyLogger.info("Server started on $localIp:$port in ${startTime}s!")
     proxyLogger.newline()
+
+    callEvent(EventType.PROXY_START) { it.onProxyStart() }
 }

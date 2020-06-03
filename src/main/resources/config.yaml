@@ -1,0 +1,14 @@
+# The port you want the proxy to run on
+# Players will join the proxy using this port
+# Default: 19132
+proxy-port: 19132
+
+# The maximum amount of players that can join the proxy
+# If this is set to a value below one, there will be no limit
+# Default: -1
+max-players: -1
+
+# Do you want all packets to be logged to the console?
+# This is very spammy so it's not recommended
+# Default: false
+log-packets: false

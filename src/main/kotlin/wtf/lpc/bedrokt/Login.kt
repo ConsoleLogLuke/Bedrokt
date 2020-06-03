@@ -16,6 +16,7 @@ import com.nukkitx.protocol.bedrock.packet.ServerToClientHandshakePacket
 import com.nukkitx.protocol.bedrock.util.EncryptionUtils
 import io.netty.util.AsciiString
 import net.minidev.json.JSONObject
+import wtf.lpc.bedrokt.api.EventType
 import wtf.lpc.bedrokt.api.Player
 import java.io.IOException
 import java.net.URI
@@ -151,24 +152,24 @@ fun Player.login(packet: LoginPacket) {
         verifyJwt(clientJwt, identityPublicKey)
         val skinData = clientJwt.payload.toJSONObject()
 
-        loginStuff = LoginStuff(skinData, extraData, chainData)
+        internal.loginStuff = LoginStuff(skinData, extraData, chainData)
         proxyLogger.info("Player $gamertag logged in!")
 
-        joinServer("mc.lavamc.io", 20000)
+        callEvent(EventType.PLAYER_PROXY_JOIN) { it.onPlayerProxyJoin(this) }
     } catch (e: Exception) {
-        realSession.disconnect("disconnectionScreen.internalError.cantConnect")
+        internal.realSession.disconnect("disconnectionScreen.internalError.cantConnect")
         throw RuntimeException("Unable to complete login", e)
     }
 }
 
 fun Player.finishLogin() {
-    val authData = forgeAuthData(loginStuff.keyPair, loginStuff.extraData)
-    val skinData = forgeSkinData(loginStuff.keyPair, loginStuff.skinData)
+    val authData = forgeAuthData(internal.loginStuff.keyPair, internal.loginStuff.extraData)
+    val skinData = forgeSkinData(internal.loginStuff.keyPair, internal.loginStuff.skinData)
 
-    loginStuff.chainData.remove(loginStuff.chainData.size() - 1)
-    loginStuff.chainData.add(authData?.serialize())
+    internal.loginStuff.chainData.remove(internal.loginStuff.chainData.size() - 1)
+    internal.loginStuff.chainData.add(authData?.serialize())
 
-    val json: JsonNode = jsonMapper.createObjectNode().set("chain", loginStuff.chainData)
+    val json: JsonNode = jsonMapper.createObjectNode().set("chain", internal.loginStuff.chainData)
     val chainData: AsciiString
 
     try {
@@ -194,7 +195,7 @@ fun Player.returnHandshake(packet: ServerToClientHandshakePacket) {
         val serverKey = EncryptionUtils.generateKey(x5u.toASCIIString())
 
         val key = EncryptionUtils.getSecretKey(
-            loginStuff.keyPair.private,
+            internal.loginStuff.keyPair.private,
             serverKey,
             Base64.getDecoder().decode(saltJwt.jwtClaimsSet.getStringClaim("salt"))
         )
