@@ -1,6 +1,8 @@
-@file:Suppress("unused")
+@file:Suppress("unused", "MemberVisibilityCanBePrivate")
 
 package wtf.lpc.bedrokt.api
+
+import java.io.File
 
 open class Plugin(
     val name: String,
@@ -9,4 +11,11 @@ open class Plugin(
     val authors: List<String>
 ) : BasePlugin {
     val logger = Logger(name)
+    val dataDir = File(PluginManager.pluginsDir, name)
+
+    init {
+        if (!dataDir.exists()) dataDir.mkdirs()
+    }
+
+    fun unload() = PluginManager.unloadPlugin(this)
 }

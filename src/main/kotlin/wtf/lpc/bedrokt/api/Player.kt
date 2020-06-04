@@ -38,7 +38,7 @@ open class Player(bindAddress: InetSocketAddress, realSession: BedrockServerSess
             proxyLogger.info("Player $gamertag was sent to $hostname:$port.")
 
             session.addDisconnectHandler {
-                callEvent(EventType.PLAYER_SERVER_DISCONNECT) {
+                PluginManager.callEvent(EventType.PLAYER_SERVER_DISCONNECT) {
                     it.onPlayerServerDisconnect(this, hostname, port)
                 }
             }
@@ -47,7 +47,7 @@ open class Player(bindAddress: InetSocketAddress, realSession: BedrockServerSess
                 packets.forEach {
                     if (config.logPackets) proxyLogger.debug("Server -> Client: $it")
 
-                    callEvent(EventType.SERVER_TO_CLIENT_PACKET) { player ->
+                    PluginManager.callEvent(EventType.SERVER_TO_CLIENT_PACKET) { player ->
                         player.onServerToClientPacket(this, it)
                     }
 
@@ -61,12 +61,12 @@ open class Player(bindAddress: InetSocketAddress, realSession: BedrockServerSess
                 }
             }
 
-            callEvent(EventType.PLAYER_SERVER_JOIN) { it.onPlayerServerJoin(this, hostname, port) }
+            PluginManager.callEvent(EventType.PLAYER_SERVER_JOIN) { it.onPlayerServerJoin(this, hostname, port) }
         }.join()
     }
 
     fun disconnectFromProxy(reason: String? = null) {
-        callEvent(EventType.PLAYER_PROXY_DISCONNECT) { it.onPlayerProxyDisconnect(this) }
+        PluginManager.callEvent(EventType.PLAYER_PROXY_DISCONNECT) { it.onPlayerProxyDisconnect(this) }
 
         if (!session.isClosed) session.disconnect()
 

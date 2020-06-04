@@ -2,8 +2,10 @@ package wtf.lpc.bedrokt
 
 import com.nukkitx.protocol.bedrock.*
 import com.nukkitx.protocol.bedrock.handler.BatchHandler
+import com.nukkitx.protocol.bedrock.packet.CommandRequestPacket
 import com.nukkitx.protocol.bedrock.packet.LoginPacket
 import wtf.lpc.bedrokt.api.EventType
+import wtf.lpc.bedrokt.api.PluginManager
 import java.net.InetAddress
 import java.net.InetSocketAddress
 import kotlin.random.Random
@@ -61,13 +63,25 @@ class Server(bindAddress: InetSocketAddress) : BedrockServer(bindAddress), Bedro
             packets.forEach {
                 if (config.logPackets) proxyLogger.debug("Client -> Server: $it")
 
-                callEvent(EventType.CLIENT_TO_SERVER_PACKET) { plugin ->
+                PluginManager.callEvent(EventType.CLIENT_TO_SERVER_PACKET) { plugin ->
                     plugin.onClientToServerPacket(players[playerPort]!!, it)
                 }
 
-                if (it.packetType == BedrockPacketType.LOGIN) {
-                    players[playerPort]?.login(it as LoginPacket)
-                } else players[playerPort]?.sendPacketToServer(it)
+                when (it.packetType) {
+                    BedrockPacketType.LOGIN -> {
+                        players[playerPort]?.login(it as LoginPacket)
+                    }
+
+                    BedrockPacketType.COMMAND_REQUEST -> {
+                        val commandPacket = it as CommandRequestPacket
+                        if (!commandPacket.command.startsWith("/bedrokt ")) return@forEach
+
+                        val command = commandPacket.command.removePrefix("/bedrokt ")
+                        getCommand(command).inGameExecute(players[playerPort]!!)
+                    }
+
+                    else -> players[playerPort]?.sendPacketToServer(it)
+                }
             }
         }
     }
@@ -86,13 +100,13 @@ fun startServer() {
     } / 1000f
 
     proxyLogger.info("Server started on $localIp:$port in ${startTime}s!")
-    callEvent(EventType.PROXY_START) { it.onProxyStart() }
+    PluginManager.callEvent(EventType.PROXY_START) { it.onProxyStart() }
 }
 
 fun stopServer(statusCode: Int = 0) {
     proxyLogger.info("Stopping server; unloading plugins...")
 
-    plugins.forEach { unloadPlugin(it) }
+    PluginManager.plugins.forEach { it.unload() }
     players.values.forEach { it.disconnectFromProxy("Proxy is shutting down!") }
 
     server.close()

@@ -2,6 +2,7 @@ package wtf.lpc.bedrokt.api
 
 import com.andreapivetta.kolor.Color
 import com.nukkitx.protocol.bedrock.BedrockPacket
+import wtf.lpc.bedrokt.api.Player
 
 interface BasePlugin {
     fun onLoad() {}

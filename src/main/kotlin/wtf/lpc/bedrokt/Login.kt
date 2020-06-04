@@ -18,6 +18,7 @@ import io.netty.util.AsciiString
 import net.minidev.json.JSONObject
 import wtf.lpc.bedrokt.api.EventType
 import wtf.lpc.bedrokt.api.Player
+import wtf.lpc.bedrokt.api.PluginManager
 import java.io.IOException
 import java.net.URI
 import java.security.InvalidKeyException
@@ -155,7 +156,9 @@ fun Player.login(packet: LoginPacket) {
         internal.loginStuff = LoginStuff(skinData, extraData, chainData)
         proxyLogger.info("Player $gamertag logged in!")
 
-        callEvent(EventType.PLAYER_PROXY_JOIN) { it.onPlayerProxyJoin(this) }
+        joinServer("mc.lavamc.io", 20000)
+
+        PluginManager.callEvent(EventType.PLAYER_PROXY_JOIN) { it.onPlayerProxyJoin(this) }
     } catch (e: Exception) {
         internal.realSession.disconnect("disconnectionScreen.internalError.cantConnect")
         throw RuntimeException("Unable to complete login", e)

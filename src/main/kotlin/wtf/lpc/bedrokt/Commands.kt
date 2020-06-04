@@ -1,7 +1,9 @@
 package wtf.lpc.bedrokt
 
 import wtf.lpc.bedrokt.api.Bedrokt
+import wtf.lpc.bedrokt.api.ChatColor
 import wtf.lpc.bedrokt.api.Player
+import wtf.lpc.bedrokt.api.PluginManager
 
 abstract class Command(val name: String, val description: String) {
     abstract fun consoleExecute()
@@ -47,8 +49,11 @@ class StopCommand : Command("stop", "Stops the proxy") {
 }
 
 class ReloadCommand : Command("reload", "Reloads all plugins") {
-    override fun consoleExecute() = reloadPlugins()
-    override fun inGameExecute(player: Player) = reloadPlugins()
+    override fun consoleExecute() = PluginManager.reloadPlugins()
+
+    override fun inGameExecute(player: Player) = player.sendMessage(
+        "${ChatColor.RED}Currently plugins can only be reloaded from the console! This will be changed in the future."
+    )
 }
 
 val commands = listOf(

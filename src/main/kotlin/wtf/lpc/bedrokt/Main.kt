@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.nukkitx.protocol.bedrock.BedrockPacketCodec
 import com.nukkitx.protocol.bedrock.v390.Bedrock_v390
+import wtf.lpc.bedrokt.api.PluginManager
 import java.io.File
 import java.util.*
 import kotlin.concurrent.schedule
@@ -28,7 +29,7 @@ fun main() {
     }
 
     reloadConfig()
-    reloadPlugins()
+    PluginManager.reloadPlugins()
 
     proxyLogger.newline()
     startServer()
