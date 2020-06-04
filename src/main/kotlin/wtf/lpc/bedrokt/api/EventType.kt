@@ -11,5 +11,7 @@ enum class EventType(val methodName: String) {
     PLAYER_SERVER_DISCONNECT("onPlayerServerDisconnect"),
 
     CLIENT_TO_SERVER_PACKET("onClientToServerPacket"),
-    SERVER_TO_CLIENT_PACKET("onServerToClientPacket")
+    SERVER_TO_CLIENT_PACKET("onServerToClientPacket"),
+
+    COMMAND_PREPROCESS("onCommandPreprocess")
 }

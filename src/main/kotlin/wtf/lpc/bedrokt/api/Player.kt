@@ -14,7 +14,10 @@ import wtf.lpc.bedrokt.*
 import java.net.InetSocketAddress
 import java.util.*
 
-open class Player(bindAddress: InetSocketAddress, realSession: BedrockServerSession) : BedrockClient(bindAddress) {
+open class Player(
+    bindAddress: InetSocketAddress,
+    realSession: BedrockServerSession
+) : BedrockClient(bindAddress), CommandSender {
     class Internal(val realSession: BedrockServerSession) {
         lateinit var loginStuff: LoginStuff
     }
@@ -45,7 +48,9 @@ open class Player(bindAddress: InetSocketAddress, realSession: BedrockServerSess
 
             session.batchedHandler = BatchHandler { _, _, packets ->
                 packets.forEach {
-                    if (config.logPackets) proxyLogger.debug("Server -> Client: $it")
+                    if (config.logPackets && it.packetType !in config.ignoredPackets) {
+                        proxyLogger.debug("Server -> Client: $it")
+                    }
 
                     PluginManager.callEvent(EventType.SERVER_TO_CLIENT_PACKET) { player ->
                         player.onServerToClientPacket(this, it)

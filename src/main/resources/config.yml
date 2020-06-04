@@ -8,7 +8,21 @@ proxy-port: 19132
 # Default: -1
 max-players: -1
 
-# Do you want all packets to be logged to the console?
+# Do you want packets to be logged to the console?
 # This is very spammy so it's not recommended
 # Default: false
 log-packets: false
+
+# The packet types you want to exempt from being logged to the console
+# This option only takes effect if log-packets is enabled
+# The names of the packets come from NukkitX's Protocol library
+# Default: NETWORK_STACK_LATENCY, LEVEL_CHUNK, MOVE_PLAYER, PLAYER_AUTH_INPUT, NETWORK_CHUNK_PUBLISHER_UPDATE,
+#          CLIENT_CACHE_BLOB_STATUS, CLIENT_CACHE_MISS_RESPONSE
+ignored-packets:
+  - NETWORK_STACK_LATENCY
+  - LEVEL_CHUNK
+  - MOVE_PLAYER
+  - PLAYER_AUTH_INPUT
+  - NETWORK_CHUNK_PUBLISHER_UPDATE
+  - CLIENT_CACHE_BLOB_STATUS
+  - CLIENT_CACHE_MISS_RESPONSE

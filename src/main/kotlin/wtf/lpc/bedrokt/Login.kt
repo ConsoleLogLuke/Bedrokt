@@ -156,8 +156,6 @@ fun Player.login(packet: LoginPacket) {
         internal.loginStuff = LoginStuff(skinData, extraData, chainData)
         proxyLogger.info("Player $gamertag logged in!")
 
-        joinServer("mc.lavamc.io", 20000)
-
         PluginManager.callEvent(EventType.PLAYER_PROXY_JOIN) { it.onPlayerProxyJoin(this) }
     } catch (e: Exception) {
         internal.realSession.disconnect("disconnectionScreen.internalError.cantConnect")

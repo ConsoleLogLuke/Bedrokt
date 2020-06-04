@@ -43,7 +43,11 @@ class PluginManager {
         }
 
         fun loadPlugin(file: File): Boolean {
-            val plugin = loadJarPlugin(file)
+            val plugin = when (file.extension) {
+                "jar" -> loadJarPlugin(file)
+                else -> loadJarPlugin(file)
+            }
+
             val success = runArbitraryPluginCode(
                 "${plugin.name}: An error occurred in onLoad. This plugin will not be loaded."
             ) { plugin.onLoad() }
@@ -76,7 +80,7 @@ class PluginManager {
                 }
 
                 for (file in pluginsDir.listFiles()!!) {
-                    if (file.isDirectory || file.extension != "jar") continue
+                    if (file.isDirectory || file.extension !in listOf("jar")) continue
 
                     if (loadPlugin(file)) loadCount++
                 }

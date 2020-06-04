@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.nukkitx.protocol.bedrock.BedrockPacketCodec
 import com.nukkitx.protocol.bedrock.v390.Bedrock_v390
+import wtf.lpc.bedrokt.api.CommandSender
 import wtf.lpc.bedrokt.api.PluginManager
 import java.io.File
 import java.util.*
@@ -21,9 +22,15 @@ fun main() {
     proxyLogger.newline()
 
     if (File("/").canWrite()) {
-        proxyLogger.warn("Bedrokt has root write access. This IS dangerous because plugins can run any arbitrary code!")
-        proxyLogger.warn("It is highly recommended that you stop Bedrokt and ensure it doesn't have access to root.")
-        proxyLogger.warn("However, if you know what you're doing and want to start Bedrokt anyway, press enter/return.")
+        proxyLogger.warn(
+            "Bedrokt has root write access. This IS dangerous because plugins can run any arbitrary code!"
+        )
+        proxyLogger.warn(
+            "It is highly recommended that you stop Bedrokt and ensure it doesn't have access to root."
+        )
+        proxyLogger.warn(
+            "However, if you know what you're doing and want to start Bedrokt anyway, press enter/return."
+        )
 
         readLine()
     }
@@ -35,14 +42,10 @@ fun main() {
     startServer()
 
     proxyLogger.newline()
-    proxyLogger.info("Done! Run /help for a list of Bedrokt commands.")
+    proxyLogger.info("Done! Run \"bedrokt help\" for a list of Bedrokt commands.")
 
     Timer().schedule(0, 1) {
         val input = readLine() ?: return@schedule
-
-        if (input.startsWith("/")) {
-            val command = input.removePrefix("/")
-            getCommand(command).consoleExecute()
-        }
+        executeCommand(input.trim(), CommandSender.consoleSender)
     }
 }

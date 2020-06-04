@@ -12,6 +12,7 @@ open class Plugin(
 ) : BasePlugin {
     val logger = Logger(name)
     val dataDir = File(PluginManager.pluginsDir, name)
+    val commands = mutableListOf<Command>()
 
     init {
         if (!dataDir.exists()) dataDir.mkdirs()

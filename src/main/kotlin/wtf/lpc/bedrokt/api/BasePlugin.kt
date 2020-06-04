@@ -19,4 +19,6 @@ interface BasePlugin {
 
     fun onClientToServerPacket(player: Player, packet: BedrockPacket) {}
     fun onServerToClientPacket(player: Player, packet: BedrockPacket) {}
+
+    fun onCommandPreprocess(sender: CommandSender, command: String) {}
 }

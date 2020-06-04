@@ -61,7 +61,9 @@ class Server(bindAddress: InetSocketAddress) : BedrockServer(bindAddress), Bedro
 
         session.batchedHandler = BatchHandler { _, _, packets ->
             packets.forEach {
-                if (config.logPackets) proxyLogger.debug("Client -> Server: $it")
+                if (config.logPackets && it.packetType !in config.ignoredPackets) {
+                    proxyLogger.debug("Client -> Server: $it")
+                }
 
                 PluginManager.callEvent(EventType.CLIENT_TO_SERVER_PACKET) { plugin ->
                     plugin.onClientToServerPacket(players[playerPort]!!, it)
@@ -74,10 +76,9 @@ class Server(bindAddress: InetSocketAddress) : BedrockServer(bindAddress), Bedro
 
                     BedrockPacketType.COMMAND_REQUEST -> {
                         val commandPacket = it as CommandRequestPacket
-                        if (!commandPacket.command.startsWith("/bedrokt ")) return@forEach
+                        val commandString = commandPacket.command.trim().removePrefix("/")
 
-                        val command = commandPacket.command.removePrefix("/bedrokt ")
-                        getCommand(command).inGameExecute(players[playerPort]!!)
+                        executeCommand(commandString, players[playerPort]!!)
                     }
 
                     else -> players[playerPort]?.sendPacketToServer(it)

@@ -8,13 +8,17 @@ import wtf.lpc.bedrokt.logHistory
 import wtf.lpc.bedrokt.stopServer
 
 class Logger(private val name: String) {
-    private fun log(color: Color, message: String) {
-        PluginManager.callEvent(EventType.CONSOLE_MESSAGE) { it.onConsoleMessage(name, color, message) }
-
+    private fun log(color: Color, message: String, commandSender: CommandSender? = null) {
         val fullMessage = Kolor.foreground("-> ", color) + name + Kolor.foreground(" | ", color) + message
 
-        println(fullMessage)
-        logHistory.add(fullMessage)
+        if (commandSender == null || commandSender is CommandSender.ConsoleSender) {
+            println(fullMessage)
+
+            PluginManager.callEvent(EventType.CONSOLE_MESSAGE) { it.onConsoleMessage(name, color, message) }
+            logHistory.add(fullMessage)
+        } else if (commandSender is Player) {
+            commandSender.sendMessage(fullMessage)
+        }
     }
 
     fun newline() {
@@ -22,10 +26,10 @@ class Logger(private val name: String) {
         logHistory.add("")
     }
 
-    fun info(message: String) = log(Color.CYAN, message)
-    fun warn(message: String) = log(Color.YELLOW, message)
-    fun error(message: String) = log(Color.RED, message)
-    fun debug(message: String) = log(Color.DARK_GRAY, message)
+    fun info(message: String, commandSender: CommandSender? = null) = log(Color.CYAN, message, commandSender)
+    fun warn(message: String, commandSender: CommandSender? = null) = log(Color.YELLOW, message, commandSender)
+    fun error(message: String, commandSender: CommandSender? = null) = log(Color.RED, message, commandSender)
+    fun debug(message: String, commandSender: CommandSender? = null) = log(Color.DARK_GRAY, message, commandSender)
 
     fun fatal(message: String) {
         log(Color.RED, message)
