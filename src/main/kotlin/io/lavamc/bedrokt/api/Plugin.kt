@@ -1,6 +1,6 @@
 @file:Suppress("unused", "MemberVisibilityCanBePrivate")
 
-package wtf.lpc.bedrokt.api
+package io.lavamc.bedrokt.api
 
 import java.io.File
 

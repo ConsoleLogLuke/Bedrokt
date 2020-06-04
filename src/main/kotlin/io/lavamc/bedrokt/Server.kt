@@ -1,11 +1,11 @@
-package wtf.lpc.bedrokt
+package io.lavamc.bedrokt
 
 import com.nukkitx.protocol.bedrock.*
 import com.nukkitx.protocol.bedrock.handler.BatchHandler
 import com.nukkitx.protocol.bedrock.packet.CommandRequestPacket
 import com.nukkitx.protocol.bedrock.packet.LoginPacket
-import wtf.lpc.bedrokt.api.EventType
-import wtf.lpc.bedrokt.api.PluginManager
+import io.lavamc.bedrokt.api.EventType
+import io.lavamc.bedrokt.api.PluginManager
 import java.net.InetAddress
 import java.net.InetSocketAddress
 import kotlin.random.Random
@@ -78,7 +78,10 @@ class Server(bindAddress: InetSocketAddress) : BedrockServer(bindAddress), Bedro
                         val commandPacket = it as CommandRequestPacket
                         val commandString = commandPacket.command.trim().removePrefix("/")
 
-                        executeCommand(commandString, players[playerPort]!!)
+                        executeCommand(
+                            commandString,
+                            players[playerPort]!!
+                        )
                     }
 
                     else -> players[playerPort]?.sendPacketToServer(it)

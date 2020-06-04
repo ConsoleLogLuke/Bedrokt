@@ -1,4 +1,4 @@
-package wtf.lpc.bedrokt.api
+package io.lavamc.bedrokt.api
 
 enum class EventType(val methodName: String) {
     PROXY_START("onProxyStart"),

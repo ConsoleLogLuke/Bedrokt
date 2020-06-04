@@ -1,5 +1,6 @@
-package wtf.lpc.bedrokt
+package io.lavamc.bedrokt
 
+import io.lavamc.bedrokt.api.*
 import wtf.lpc.bedrokt.api.*
 
 abstract class InternalCommand(val name: String, val description: String) {
@@ -21,7 +22,8 @@ class HelpCommand : InternalCommand("help", "Displays this help menu") {
 
 class VersionCommand : InternalCommand("version", "Displays the current Bedrokt version") {
     override fun consoleExecute() = proxyLogger.info(fullBedroktVersion)
-    override fun inGameExecute(player: Player) = proxyLogger.info(fullBedroktVersion, player)
+    override fun inGameExecute(player: Player) = proxyLogger.info(
+        fullBedroktVersion, player)
 }
 
 class ListCommand : InternalCommand("list", "Lists all players currently connected to the proxy") {

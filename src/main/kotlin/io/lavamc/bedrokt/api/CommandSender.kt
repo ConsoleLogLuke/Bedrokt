@@ -1,4 +1,4 @@
-package wtf.lpc.bedrokt.api
+package io.lavamc.bedrokt.api
 
 interface CommandSender {
     class ConsoleSender : CommandSender

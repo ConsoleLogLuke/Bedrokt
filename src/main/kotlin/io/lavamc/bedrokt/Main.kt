@@ -1,11 +1,11 @@
-package wtf.lpc.bedrokt
+package io.lavamc.bedrokt
 
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.nukkitx.protocol.bedrock.BedrockPacketCodec
 import com.nukkitx.protocol.bedrock.v390.Bedrock_v390
-import wtf.lpc.bedrokt.api.CommandSender
-import wtf.lpc.bedrokt.api.PluginManager
+import io.lavamc.bedrokt.api.CommandSender
+import io.lavamc.bedrokt.api.PluginManager
 import java.io.File
 import java.util.*
 import kotlin.concurrent.schedule
@@ -46,6 +46,9 @@ fun main() {
 
     Timer().schedule(0, 1) {
         val input = readLine() ?: return@schedule
-        executeCommand(input.trim(), CommandSender.consoleSender)
+        executeCommand(
+            input.trim(),
+            CommandSender.consoleSender
+        )
     }
 }

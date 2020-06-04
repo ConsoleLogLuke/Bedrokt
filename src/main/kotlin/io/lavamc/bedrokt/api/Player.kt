@@ -1,6 +1,6 @@
 @file:Suppress("unused", "MemberVisibilityCanBePrivate")
 
-package wtf.lpc.bedrokt.api
+package io.lavamc.bedrokt.api
 
 import com.nukkitx.protocol.bedrock.BedrockClient
 import com.nukkitx.protocol.bedrock.BedrockPacket
@@ -10,6 +10,7 @@ import com.nukkitx.protocol.bedrock.handler.BatchHandler
 import com.nukkitx.protocol.bedrock.packet.ServerToClientHandshakePacket
 import com.nukkitx.protocol.bedrock.packet.TextPacket
 import com.nukkitx.protocol.bedrock.packet.TransferPacket
+import io.lavamc.bedrokt.*
 import wtf.lpc.bedrokt.*
 import java.net.InetSocketAddress
 import java.util.*
@@ -66,12 +67,22 @@ open class Player(
                 }
             }
 
-            PluginManager.callEvent(EventType.PLAYER_SERVER_JOIN) { it.onPlayerServerJoin(this, hostname, port) }
+            PluginManager.callEvent(EventType.PLAYER_SERVER_JOIN) {
+                it.onPlayerServerJoin(
+                    this,
+                    hostname,
+                    port
+                )
+            }
         }.join()
     }
 
     fun disconnectFromProxy(reason: String? = null) {
-        PluginManager.callEvent(EventType.PLAYER_PROXY_DISCONNECT) { it.onPlayerProxyDisconnect(this) }
+        PluginManager.callEvent(EventType.PLAYER_PROXY_DISCONNECT) {
+            it.onPlayerProxyDisconnect(
+                this
+            )
+        }
 
         if (!session.isClosed) session.disconnect()
 

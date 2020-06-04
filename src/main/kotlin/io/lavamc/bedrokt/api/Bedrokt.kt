@@ -1,9 +1,9 @@
 @file:Suppress("unused")
 
-package wtf.lpc.bedrokt.api
+package io.lavamc.bedrokt.api
 
-import wtf.lpc.bedrokt.players
-import wtf.lpc.bedrokt.stopServer
+import io.lavamc.bedrokt.players
+import io.lavamc.bedrokt.stopServer
 import java.util.*
 
 class Bedrokt {

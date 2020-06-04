@@ -1,6 +1,6 @@
 @file:Suppress("MemberVisibilityCanBePrivate", "unused")
 
-package wtf.lpc.bedrokt.api
+package io.lavamc.bedrokt.api
 
 abstract class Command(
     val name: String,

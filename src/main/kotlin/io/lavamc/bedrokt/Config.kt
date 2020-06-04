@@ -1,4 +1,4 @@
-package wtf.lpc.bedrokt
+package io.lavamc.bedrokt
 
 import com.nukkitx.protocol.bedrock.BedrockPacketType
 import org.yaml.snakeyaml.Yaml

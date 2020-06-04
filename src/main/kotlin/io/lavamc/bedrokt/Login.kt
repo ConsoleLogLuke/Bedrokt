@@ -1,4 +1,4 @@
-package wtf.lpc.bedrokt
+package io.lavamc.bedrokt
 
 import com.fasterxml.jackson.core.JsonProcessingException
 import com.fasterxml.jackson.databind.JsonNode
@@ -16,9 +16,9 @@ import com.nukkitx.protocol.bedrock.packet.ServerToClientHandshakePacket
 import com.nukkitx.protocol.bedrock.util.EncryptionUtils
 import io.netty.util.AsciiString
 import net.minidev.json.JSONObject
-import wtf.lpc.bedrokt.api.EventType
-import wtf.lpc.bedrokt.api.Player
-import wtf.lpc.bedrokt.api.PluginManager
+import io.lavamc.bedrokt.api.EventType
+import io.lavamc.bedrokt.api.Player
+import io.lavamc.bedrokt.api.PluginManager
 import java.io.IOException
 import java.net.URI
 import java.security.InvalidKeyException
@@ -87,7 +87,8 @@ private fun validateChainData(data: JsonNode): Boolean {
 
     for (node in data) {
         val jwt = JWSObject.parse(node.asText())
-        if (!validChain) validChain = verifyJwt(jwt, EncryptionUtils.getMojangPublicKey())
+        if (!validChain) validChain =
+            verifyJwt(jwt, EncryptionUtils.getMojangPublicKey())
 
         lastKey?.let { verifyJwt(jwt, it) }
 
@@ -164,8 +165,10 @@ fun Player.login(packet: LoginPacket) {
 }
 
 fun Player.finishLogin() {
-    val authData = forgeAuthData(internal.loginStuff.keyPair, internal.loginStuff.extraData)
-    val skinData = forgeSkinData(internal.loginStuff.keyPair, internal.loginStuff.skinData)
+    val authData =
+        forgeAuthData(internal.loginStuff.keyPair, internal.loginStuff.extraData)
+    val skinData =
+        forgeSkinData(internal.loginStuff.keyPair, internal.loginStuff.skinData)
 
     internal.loginStuff.chainData.remove(internal.loginStuff.chainData.size() - 1)
     internal.loginStuff.chainData.add(authData?.serialize())

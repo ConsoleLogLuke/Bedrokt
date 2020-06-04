@@ -1,8 +1,8 @@
 @file:Suppress("MemberVisibilityCanBePrivate")
 
-package wtf.lpc.bedrokt.api
+package io.lavamc.bedrokt.api
 
-import wtf.lpc.bedrokt.proxyLogger
+import io.lavamc.bedrokt.proxyLogger
 import java.io.File
 import java.net.URLClassLoader
 import java.util.*

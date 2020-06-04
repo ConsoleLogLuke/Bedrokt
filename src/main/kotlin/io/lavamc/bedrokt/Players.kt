@@ -1,7 +1,7 @@
-package wtf.lpc.bedrokt
+package io.lavamc.bedrokt
 
 import com.nukkitx.protocol.bedrock.BedrockServerSession
-import wtf.lpc.bedrokt.api.Player
+import io.lavamc.bedrokt.api.Player
 import java.net.InetSocketAddress
 
 val players = mutableMapOf<Int, Player>()

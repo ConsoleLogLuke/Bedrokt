@@ -1,8 +1,8 @@
-package wtf.lpc.bedrokt.api
+package io.lavamc.bedrokt.api
 
 import com.andreapivetta.kolor.Color
 import com.nukkitx.protocol.bedrock.BedrockPacket
-import wtf.lpc.bedrokt.api.Player
+import io.lavamc.bedrokt.api.Player
 
 interface BasePlugin {
     fun onLoad() {}

@@ -1,6 +1,6 @@
-package wtf.lpc.bedrokt
+package io.lavamc.bedrokt
 
-import wtf.lpc.bedrokt.api.Logger
+import io.lavamc.bedrokt.api.Logger
 import java.io.File
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter

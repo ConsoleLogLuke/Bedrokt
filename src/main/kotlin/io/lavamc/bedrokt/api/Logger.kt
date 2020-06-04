@@ -1,11 +1,11 @@
 @file:Suppress("unused")
 
-package wtf.lpc.bedrokt.api
+package io.lavamc.bedrokt.api
 
 import com.andreapivetta.kolor.Color
 import com.andreapivetta.kolor.Kolor
-import wtf.lpc.bedrokt.logHistory
-import wtf.lpc.bedrokt.stopServer
+import io.lavamc.bedrokt.logHistory
+import io.lavamc.bedrokt.stopServer
 
 class Logger(private val name: String) {
     private fun log(color: Color, message: String, commandSender: CommandSender? = null) {
@@ -14,7 +14,13 @@ class Logger(private val name: String) {
         if (commandSender == null || commandSender is CommandSender.ConsoleSender) {
             println(fullMessage)
 
-            PluginManager.callEvent(EventType.CONSOLE_MESSAGE) { it.onConsoleMessage(name, color, message) }
+            PluginManager.callEvent(EventType.CONSOLE_MESSAGE) {
+                it.onConsoleMessage(
+                    name,
+                    color,
+                    message
+                )
+            }
             logHistory.add(fullMessage)
         } else if (commandSender is Player) {
             commandSender.sendMessage(fullMessage)
