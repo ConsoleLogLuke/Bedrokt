@@ -48,8 +48,7 @@ class PluginManager {
                     .next()
                     .trim()
 
-                val configFile = File(instance.dataDir, "config.yml")
-                if (!configFile.exists()) configFile.writeText(defaultConfig)
+                instance.defaultConfig = defaultConfig
             }
 
             return instance

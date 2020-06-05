@@ -16,7 +16,7 @@ fun saveLog() {
 
     val dateTime = LocalDateTime.now()
     val dateName = dateTime.format(DateTimeFormatter.ISO_LOCAL_DATE)
-    val timeName = dateTime.format(DateTimeFormatter.ISO_LOCAL_TIME)
+    val timeName = dateTime.format(DateTimeFormatter.ofPattern("H-m-s"))
 
     val logDir = File("logs", dateName)
     if (!logDir.exists()) logDir.mkdirs()

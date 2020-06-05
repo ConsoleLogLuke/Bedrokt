@@ -14,6 +14,8 @@ open class Plugin : BasePlugin {
     lateinit var logger: Logger
     lateinit var dataDir: File
 
+    var defaultConfig: String? = null
+
     val commands = mutableListOf<Command>()
     private val yaml = Yaml()
 
@@ -34,6 +36,11 @@ open class Plugin : BasePlugin {
     }
 
     fun unload() = PluginManager.unloadPlugin(this)
+
+    fun saveDefaultConfig() {
+        val configFile = File(dataDir, "config.yml")
+        if (defaultConfig != null) configFile.writeText(defaultConfig!!)
+    }
 
     fun getConfig(): Map<String, Any> {
         val configString = File(dataDir, "config.yml").readText()
