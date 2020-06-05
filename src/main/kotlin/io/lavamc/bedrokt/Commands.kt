@@ -1,7 +1,6 @@
 package io.lavamc.bedrokt
 
 import io.lavamc.bedrokt.api.*
-import wtf.lpc.bedrokt.api.*
 
 abstract class InternalCommand(val name: String, val description: String) {
     abstract fun consoleExecute()

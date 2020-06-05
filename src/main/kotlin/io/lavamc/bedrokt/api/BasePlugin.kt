@@ -2,7 +2,6 @@ package io.lavamc.bedrokt.api
 
 import com.andreapivetta.kolor.Color
 import com.nukkitx.protocol.bedrock.BedrockPacket
-import io.lavamc.bedrokt.api.Player
 
 interface BasePlugin {
     fun onLoad() {}

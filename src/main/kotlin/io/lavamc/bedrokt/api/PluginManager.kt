@@ -39,7 +39,20 @@ class PluginManager {
             val plugin = pluginClass.asSubclass(Plugin::class.java)
             val constructor = plugin.getConstructor()
 
-            return constructor.newInstance()
+            val instance = constructor.newInstance()
+
+            val configEntry = jar.getJarEntry("config.yml")
+            if (configEntry != null) {
+                val defaultConfig = Scanner(jar.getInputStream(configEntry))
+                    .useDelimiter("\\A")
+                    .next()
+                    .trim()
+
+                val configFile = File(instance.dataDir, "config.yml")
+                if (!configFile.exists()) configFile.writeText(defaultConfig)
+            }
+
+            return instance
         }
 
         fun loadPlugin(file: File): Boolean {

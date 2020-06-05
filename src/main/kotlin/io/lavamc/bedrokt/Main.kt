@@ -38,6 +38,11 @@ fun main() {
     reloadConfig()
     PluginManager.reloadPlugins()
 
+    if (PluginManager.plugins.isEmpty()) {
+        proxyLogger.warn("You have no plugins! Without any plugins, the proxy will do nothing.")
+        proxyLogger.warn("Please add the Base plugin to gain the missing functionality.")
+    }
+
     proxyLogger.newline()
     startServer()
 

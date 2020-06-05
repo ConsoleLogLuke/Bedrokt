@@ -6,12 +6,13 @@ import com.nukkitx.protocol.bedrock.BedrockClient
 import com.nukkitx.protocol.bedrock.BedrockPacket
 import com.nukkitx.protocol.bedrock.BedrockPacketType
 import com.nukkitx.protocol.bedrock.BedrockServerSession
+import com.nukkitx.protocol.bedrock.data.CommandOriginData
 import com.nukkitx.protocol.bedrock.handler.BatchHandler
+import com.nukkitx.protocol.bedrock.packet.CommandRequestPacket
 import com.nukkitx.protocol.bedrock.packet.ServerToClientHandshakePacket
 import com.nukkitx.protocol.bedrock.packet.TextPacket
 import com.nukkitx.protocol.bedrock.packet.TransferPacket
 import io.lavamc.bedrokt.*
-import wtf.lpc.bedrokt.*
 import java.net.InetSocketAddress
 import java.util.*
 
@@ -61,7 +62,7 @@ open class Player(
                         BedrockPacketType.SERVER_TO_CLIENT_HANDSHAKE -> {
                             returnHandshake(it as ServerToClientHandshakePacket)
                         }
-                        BedrockPacketType.DISCONNECT -> disconnectFromProxy()
+
                         else -> sendPacketToClient(it)
                     }
                 }
@@ -114,5 +115,23 @@ open class Player(
         packet.message = message
 
         sendPacketToClient(packet)
+    }
+
+    fun runCommand(command: String) {
+        val actualCommand = if (command.startsWith("/")) command else "/$command"
+
+        val packet = CommandRequestPacket()
+        packet.command = actualCommand
+
+        packet.commandOriginData = CommandOriginData(
+            CommandOriginData.Origin.PLAYER,
+            UUID.randomUUID(),
+            null,
+            -1
+        )
+
+        packet.isInternal = false
+
+        sendPacketToServer(packet)
     }
 }
