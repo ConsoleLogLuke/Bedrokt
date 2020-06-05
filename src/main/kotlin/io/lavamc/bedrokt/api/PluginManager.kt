@@ -42,13 +42,15 @@ class PluginManager {
             val instance = constructor.newInstance()
 
             val configEntry = jar.getJarEntry("config.yml")
-            if (configEntry != null) {
+            val configFile = File(instance.dataDir, "config.yml")
+
+            if (!configFile.exists() && configEntry != null) {
                 val defaultConfig = Scanner(jar.getInputStream(configEntry))
                     .useDelimiter("\\A")
                     .next()
                     .trim()
 
-                instance.defaultConfig = defaultConfig
+                configFile.writeText(defaultConfig)
             }
 
             return instance
