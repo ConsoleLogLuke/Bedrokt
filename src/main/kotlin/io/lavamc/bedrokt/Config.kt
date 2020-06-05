@@ -7,6 +7,7 @@ import java.util.*
 
 data class Config(
     val proxyPort: Int,
+    val proxyIp: String,
     val maxPlayers: Int,
     val logPackets: Boolean,
     val ignoredPackets: List<BedrockPacketType>
@@ -28,6 +29,7 @@ fun reloadConfig() {
     @Suppress("UNCHECKED_CAST")
     config = Config(
         yaml["proxy-port"] as Int,
+        yaml["proxy-ip"] as String,
         yaml["max-players"] as Int,
         yaml["log-packets"] as Boolean,
         (yaml["ignored-packets"] as List<String>)

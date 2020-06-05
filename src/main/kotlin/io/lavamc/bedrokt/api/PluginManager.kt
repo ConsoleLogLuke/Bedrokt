@@ -103,7 +103,9 @@ class PluginManager {
             val unloadWord = if (unloadCount == 1) "plugin" else "plugins"
             val loadWord = if (loadCount == 1) "plugin" else "plugins"
 
-            proxyLogger.info("Unloaded $unloadCount $unloadWord and loaded $loadCount $loadWord in ${reloadTime}s!")
+            proxyLogger.info(
+                "Unloaded $unloadCount $unloadWord and loaded $loadCount $loadWord in ${reloadTime}s!"
+            )
         }
 
         fun callEvent(eventType: EventType, code: (Plugin) -> Unit) {

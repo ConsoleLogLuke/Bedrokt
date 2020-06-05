@@ -15,14 +15,13 @@ class HelpCommand : InternalCommand("help", "Displays this help menu") {
         }
     }
 
-    override fun consoleExecute() = execute("/") { proxyLogger.info(it) }
+    override fun consoleExecute() = execute("bedrokt ") { proxyLogger.info(it) }
     override fun inGameExecute(player: Player) = execute("/bedrokt ") { proxyLogger.info(it, player) }
 }
 
 class VersionCommand : InternalCommand("version", "Displays the current Bedrokt version") {
     override fun consoleExecute() = proxyLogger.info(fullBedroktVersion)
-    override fun inGameExecute(player: Player) = proxyLogger.info(
-        fullBedroktVersion, player)
+    override fun inGameExecute(player: Player) = proxyLogger.info(fullBedroktVersion, player)
 }
 
 class ListCommand : InternalCommand("list", "Lists all players currently connected to the proxy") {
@@ -49,11 +48,14 @@ class StopCommand : InternalCommand("stop", "Stops the proxy") {
     )
 }
 
-class ReloadCommand : InternalCommand("reload", "Reloads all plugins") {
-    override fun consoleExecute() = PluginManager.reloadPlugins()
+class ReloadCommand : InternalCommand("reload", "Reloads all plugins and config files") {
+    override fun consoleExecute() {
+        reloadConfig()
+        PluginManager.reloadPlugins()
+    }
 
     override fun inGameExecute(player: Player) = proxyLogger.error(
-        "Currently plugins can only be reloaded from the console! This will be changed in the future.", player
+        "Currently Bedrokt can only be reloaded from the console! This will be changed in the future.", player
     )
 }
 

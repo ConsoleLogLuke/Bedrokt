@@ -9,15 +9,18 @@ import io.lavamc.bedrokt.api.PluginManager
 import java.net.InetAddress
 import java.net.InetSocketAddress
 import kotlin.random.Random
-import kotlin.system.exitProcess
 import kotlin.system.measureTimeMillis
 
 lateinit var server: Server
 
 class Server(bindAddress: InetSocketAddress) : BedrockServer(bindAddress), BedrockServerEventHandler {
+    var running = false
+
     fun start() {
         handler = this
         server.bind().join()
+
+        running = true
     }
 
     override fun onConnectionRequest(address: InetSocketAddress) = true
@@ -36,7 +39,7 @@ class Server(bindAddress: InetSocketAddress) : BedrockServer(bindAddress), Bedro
         pong.maximumPlayerCount = if (config.maxPlayers < 1) pong.playerCount + 1 else config.maxPlayers
 
         pong.motd = "A Bedrokt proxy"
-        pong.subMotd = "Test"
+        pong.subMotd = "https://github.com/ConsoleLogLuke/Bedrokt"
 
         pong.ipv4Port = 19132
 
@@ -94,7 +97,7 @@ class Server(bindAddress: InetSocketAddress) : BedrockServer(bindAddress), Bedro
 fun startServer() {
     proxyLogger.info("Starting server...")
 
-    val localIp = InetAddress.getLocalHost().hostAddress
+    val localIp = if (config.proxyIp == "auto") InetAddress.getLocalHost().hostAddress else config.proxyIp
     val port = config.proxyPort
     val bindAddress = InetSocketAddress(localIp, port)
 
@@ -116,6 +119,8 @@ fun stopServer(statusCode: Int = 0) {
     server.close()
     saveLog()
 
+    server.running = false
+
     proxyLogger.info("Goodbye!")
-    exitProcess(statusCode)
+    Runtime.getRuntime().halt(statusCode)
 }

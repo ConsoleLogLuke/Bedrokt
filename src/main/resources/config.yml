@@ -3,6 +3,11 @@
 # Default: 19132
 proxy-port: 19132
 
+# The IP address you want the proxy to run on
+# If this is set to auto, your local IP address will be used
+# Default: auto
+proxy-ip: auto
+
 # The maximum amount of players that can join the proxy
 # If this is set to a value below one, there will be no limit
 # Default: -1
